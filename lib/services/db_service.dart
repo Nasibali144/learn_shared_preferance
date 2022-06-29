@@ -2,14 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DataService {
   late Directory directory;
   late File file;
 
   Future<DataService> instance() async {
-    directory = await getApplicationDocumentsDirectory();
-    file = _getFile();
+    if(await Permission.storage.request().isGranted) {
+      directory = await getApplicationDocumentsDirectory();
+      file = _getFile();
+      bool isFileExist = await file.exists();
+      if(!isFileExist) await _initFile();
+    } else {
+      instance();
+    }
     return this;
   }
 
