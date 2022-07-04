@@ -8,8 +8,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NewPrefService.init();
 
-  Hive.registerAdapter(PostAdapter());
   await Hive.initFlutter();
+  Hive.registerAdapter(PostAdapter());
   // await Hive.openBox('testBox');
   await Hive.openBox<Post>('postBox');
 

@@ -29,7 +29,7 @@ class PostAdapter extends TypeAdapter<Post> {
 
   @override
   Post read(BinaryReader reader) {
-    return Post.fromJson(reader.read(typeId));
+    return Post.fromJson(reader.read(typeId) ?? {"title": "No title", "content": "No content"});
   }
 
   @override

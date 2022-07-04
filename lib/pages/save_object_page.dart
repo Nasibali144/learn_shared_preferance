@@ -23,15 +23,27 @@ class _SaveObjectPageState extends State<SaveObjectPage> {
   void getData() {
     var box = Hive.box<Post>("postBox");
     post = box.get("post", defaultValue: Post("No title", "No content"))!;
+    setState(() {});
   }
 
-  void setData() async {
+  void setData(String value) async {
+    FocusScope.of(context).unfocus();
+
+    content = value;
+    setState(() {});
+
     var box = Hive.box<Post>("postBox");
-    box.put("post", Post(title, content));
+    await box.put("post", Post(title, content));
+
+    print("title: $title, content: $content");
+
+    getData();
   }
 
   void next(String value) {
     title = value;
+    setState(() {});
+
     FocusScope.of(context).nextFocus();
   }
 
@@ -44,40 +56,43 @@ class _SaveObjectPageState extends State<SaveObjectPage> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          children: const [
+          children: [
 
             // #data
             Text(
-              "Object",
-              style: TextStyle(
+              post.toString(),
+              style: const TextStyle(
                 fontSize: 25,
                 color: Colors.black,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20,),
+            const  SizedBox(height: 20,),
 
             // #title
             TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Title",
               ),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 25,
                 color: Colors.black,
               ),
+              onSubmitted: next,
+              textInputAction: TextInputAction.next,
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
 
             // #content
             TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Content",
               ),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 25,
                 color: Colors.black,
               ),
+              onSubmitted: setData,
             ),
           ],
         ),
